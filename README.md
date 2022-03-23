@@ -1,2 +1,2 @@
 # Echo
-A UI Framework
+A UI framework for Vue 3
