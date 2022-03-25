@@ -1,7 +1,7 @@
 module.exports = {
-  name: 'Basic',
-  namespace: 'b',
-  title: 'Basic UI',
+  name: 'Echo',
+  namespace: 'e',
+  title: 'Echo UI Framework',
   logo: './logo.svg',
   useMobile: true,
   themes: {
@@ -26,7 +26,7 @@ module.exports = {
     'color-pc-language-active-background': '#00968821',
     'color-mobile-language-active': '#009688',
     'color-mobile-language-active-background': '#00968821',
-    'color-mobile-cell-hover': '#009688'
+    'color-mobile-cell-hover': '#009688',
   },
   darkThemes: {
     'color-body': '#121212',
