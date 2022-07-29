@@ -1,7 +1,7 @@
 module.exports = {
   name: 'Echo',
   namespace: 'e',
-  title: 'Echo UI Framework',
+  title: 'Echo UI',
   logo: './logo.svg',
   useMobile: true,
   themes: {
