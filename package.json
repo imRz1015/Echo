@@ -100,5 +100,8 @@
     "umd",
     "highlight",
     "types"
-  ]
+  ],
+  "dependencies": {
+    "esbuild-darwin-64": "^0.14.42"
+  }
 }
