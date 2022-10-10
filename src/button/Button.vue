@@ -40,20 +40,25 @@
 <script lang="ts">
 import Ripple from '../ripple'
 import VarLoading from '../loading'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, defineProps, withDefaults } from 'vue'
 import { props } from './props'
 import { createNamespace } from '../utils/components'
+import { ButtonProps } from '../../types/button'
 import type { Ref } from 'vue'
 
 const { n, classes } = createNamespace('button')
 export default defineComponent({
-  name: 'VarButton',
+  name: 'EchoButton',
   components: {
     VarLoading,
   },
   directives: { Ripple },
   props,
-  setup(props) {
+  setup() {
+    const props = withDefaults(defineProps<ButtonProps>(), {
+      type: 'default',
+      size: 'normal',
+    })
     const pending: Ref<boolean> = ref(false)
     const attemptAutoLoading = (result: any) => {
       if (props.autoLoading) {
