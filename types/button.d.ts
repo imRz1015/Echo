@@ -1,11 +1,30 @@
-import { BasicComponent } from './basicComponent'
+import { EchoComponent, BasicAttributes, Type as ButtonType, Size as ButtonSize } from './echoComponent'
+import { LoadingType, LoadingSize } from './loading'
 
-export interface ButtonProps {
+export { ButtonType, ButtonSize }
+
+export interface ButtonProps extends BasicAttributes {
+  type?: ButtonType
+  size?: ButtonSize
+  loading?: boolean
+  round?: boolean
+  block?: boolean
+  text?: boolean
+  outline?: boolean
+  disabled?: boolean
+  ripple?: boolean
+  autoLoading?: boolean
   color?: string
+  textColor?: string
+  loadingRadius?: string | number
+  loadingType?: LoadingType
+  loadingSize?: LoadingSize
+  loadingColor?: string
   onClick?: (e: Event) => void
+  onTouchstart?: (e: Event) => void
 }
 
-export class Button extends BasicComponent {
+export class Button extends EchoComponent {
   $props: ButtonProps
 }
 

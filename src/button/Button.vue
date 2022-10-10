@@ -1,43 +1,101 @@
-<script lang="ts" setup>
-import { defineProps, withDefaults } from 'vue'
-
-interface ButtonConfig {
-  size: 'large' | 'normal' | 'mini'
-  type: 'primary' | 'success' | 'error' | 'warning'
-  ghost: boolean
-  color: string
-  loading: boolean
-  onClick?: (event: Event) => void
-}
-
-const props = withDefaults(defineProps<ButtonConfig>(), {
-  size: 'large',
-  type: 'primary',
-  ghost: false,
-  color: '#009688',
-  loading: false,
-})
-const handleClick = (e: Event) => props.onClick?.(e)
-</script>
-
-<script lang="ts">
-export default {
-  name: 'Button',
-}
-</script>
-
 <template>
   <button
-    class="basic-button"
-    :style="{ background: props.color }"
-    :loading="loading"
-    :size="props.size"
+    v-ripple="{ disabled: disabled || !ripple }"
+    :class="
+      classes(
+        n(),
+        'var--box',
+        n(`--${size}`),
+        [block, `var--flex ${n('--block')}`, 'var--inline-flex'],
+        [disabled, n('--disabled')],
+        [text, `${n(`--text-${type}`)} ${n('--text')}`, `${n(`--${type}`)} var-elevation--2`],
+        [text && disabled, n('--text-disabled')],
+        [round, n('--round')],
+        [outline, n('--outline')]
+      )
+    "
+    :style="{
+      color: textColor,
+      background: color,
+    }"
+    :disabled="disabled"
     @click="handleClick"
+    @touchstart="handleTouchstart"
   >
-    <slot />
+    <var-loading
+      :class="n('loading')"
+      var-button-cover
+      :color="loadingColor"
+      :type="loadingType"
+      :size="loadingSize"
+      :radius="loadingRadius"
+      v-if="loading || pending"
+    />
+    <div :class="classes(n('content'), [loading || pending, n('--hidden')])">
+      <slot />
+    </div>
   </button>
 </template>
 
+<script lang="ts">
+import Ripple from '../ripple'
+import VarLoading from '../loading'
+import { defineComponent, ref } from 'vue'
+import { props } from './props'
+import { createNamespace } from '../utils/components'
+import type { Ref } from 'vue'
+
+const { n, classes } = createNamespace('button')
+export default defineComponent({
+  name: 'VarButton',
+  components: {
+    VarLoading,
+  },
+  directives: { Ripple },
+  props,
+  setup(props) {
+    const pending: Ref<boolean> = ref(false)
+    const attemptAutoLoading = (result: any) => {
+      if (props.autoLoading) {
+        pending.value = true
+        Promise.resolve(result)
+          .then(() => {
+            pending.value = false
+          })
+          .catch(() => {
+            pending.value = false
+          })
+      }
+    }
+    const handleClick = (e: Event) => {
+      const { loading, disabled, onClick } = props
+      if (!onClick || loading || disabled || pending.value) {
+        return
+      }
+      attemptAutoLoading(onClick(e))
+    }
+    const handleTouchstart = (e: Event) => {
+      const { loading, disabled, onTouchstart } = props
+      if (!onTouchstart || loading || disabled || pending.value) {
+        return
+      }
+      attemptAutoLoading(onTouchstart(e))
+    }
+    return {
+      n,
+      classes,
+      pending,
+      handleClick,
+      handleTouchstart,
+    }
+  },
+})
+</script>
+
 <style lang="less">
+@import '../styles/common';
+@import '../styles/elevation';
+@import '../ripple/ripple';
+@import '../loading/loading';
 @import './button';
 </style>
